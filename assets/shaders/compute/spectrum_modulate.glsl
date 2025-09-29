@@ -46,7 +46,7 @@ vec2 conj_complex(in vec2 x) {
 
 // Jerry Tessendorf - Source: Simulating Ocean Water
 float dispersion_relation(in float k) {
-	return sqrt(G*k*tanh(k*depth));
+	return sqrt(max(G*k*tanh(k*depth), 0.f));
 }
 
 #define FFT_DATA(id, layer) (data[(id.z)*map_size*map_size*NUM_SPECTRA*2 + (layer)*map_size*map_size + (id.y)*map_size + (id.x)])

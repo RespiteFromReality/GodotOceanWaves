@@ -43,7 +43,7 @@ vec2 hash(in uvec2 x) {
 /** Samples a 2D-bivariate normal distribution */
 vec2 gaussian(in vec2 x) {
 	// Use Box-Muller transform to convert uniform distribution->normal distribution.
-	float r = sqrt(-2.0 * log(x.x));
+	float r = sqrt(max(-2.0 * log(x.x), 0.f));
 	float theta = 2.0*PI * x.y;
 	return vec2(r*cos(theta), r*sin(theta));
 }
@@ -58,7 +58,7 @@ vec2 conj_complex(in vec2 x) {
 vec2 dispersion_relation(in float k) {
 	float a = k*depth;
 	float b = tanh(a);
-	float dispersion_relation = sqrt(G*k*b);
+	float dispersion_relation = sqrt(max(G*k*b, 0.f));
 	float d_dispersion_relation = 0.5*G * (b + a*(1.0 - b*b)) / dispersion_relation;
 
 	// Return both the dispersion relation and its derivative w.r.t. k
@@ -68,7 +68,7 @@ vec2 dispersion_relation(in float k) {
 /** Normalization factor approximation for Longuet-Higgins function. */
 float longuet_higgins_normalization(in float s) {
 	// Note: i forgot how i derived this :skull:
-	float a = sqrt(s);
+	float a = sqrt(max(s, 0.f));
 	return (s < 0.4) ? (0.5/PI) + s*(0.220636+s*(-0.109+s*0.090)) : inversesqrt(PI)*(a*0.5 + (1.0/a)*0.0625);
 }
 
@@ -94,7 +94,7 @@ float TMA_spectrum(in float w, in float w_p, in float alpha) {
 	float r = exp(-(w-w_p)*(w-w_p) / (2.0 * sigma*sigma * w_p*w_p));
 	float jonswap_spectrum = (alpha * G*G) / pow(w, 5) * exp(-beta * pow(w_p/w, 4)) * pow(gamma, r);
 
-	float w_h = min(w * sqrt(depth / G), 2.0);
+	float w_h = min(w * sqrt(max(depth / G, 0.f)), 2.0);
 	float kitaigorodskii_depth_attenuation = (w_h <= 1.0) ? 0.5*w_h*w_h : 1.0 - 0.5*(2.0-w_h)*(2.0-w_h);
 
 	return jonswap_spectrum * kitaigorodskii_depth_attenuation;
@@ -111,7 +111,7 @@ vec2 get_spectrum_amplitude(in ivec2 id, in ivec2 map_size) {
 	float w_norm = dispersion[1] / k * dk.x*dk.y;
 	float s = TMA_spectrum(w, peak_frequency, alpha);
 	float d = mix(0.5/PI, hasselmann_directional_spread(w, peak_frequency, wind_speed, theta), 1.0 - spread) * exp(-(1.0-detail)*(1.0-detail) * k*k);
-	return gaussian(hash(uvec2(id + seed))) * sqrt(2.0 * s * d * w_norm);
+	return gaussian(hash(uvec2(id + seed))) * sqrt(max(2.0 * s * d * w_norm, 0.f));
 }
 
 void main() {
