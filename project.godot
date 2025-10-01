@@ -10,11 +10,16 @@ config_version=5
 
 [application]
 
-config/name="OceanWaves"
+config/name="FFT Ocean Waves"
+config/description="An open ocean rendering experiment in the Godot Engine utilizing the inverse Fourier transform of directional ocean-wave spectra for wave generation. A concise set of parameters is exposed, allowing for scriptable, real-time modification of wave properties to emulate a wide-variety of ocean-wave environments.
+
+Author:  Ethan Truong (2Retr0)
+Original repo: https://github.com/2Retr0/GodotOceanWaves"
+config/tags=PackedStringArray("c#", "gpu", "rendering", "water")
 run/main_scene="uid://dx4r13gqfh13"
 config/features=PackedStringArray("4.5", "Forward Plus")
 boot_splash/show_image=false
-config/icon="uid://d4lmcsuyxx6mo"
+config/icon="uid://cw6o2ftagrlhw"
 
 [autoload]
 
