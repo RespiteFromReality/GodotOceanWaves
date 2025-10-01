@@ -1,4 +1,10 @@
-# GodotOceanWaves
+# Fork Changes
+- Applied PR from @univeous, fixing render pipeline errors.
+- Applied commits from @20k fork, fixing rendering on AMD devices.
+- Upgraded project to generate uid and replaced res:// references with uid:// where applicable.
+- Added desc, tags, icons to project.
+
+# Godot Ocean Waves
 An open ocean rendering experiment in the Godot Engine utilizing the inverse Fourier transform of directional ocean-wave spectra for wave generation. A concise set of parameters is exposed, allowing for scriptable, real-time modification of wave properties to emulate a wide-variety of ocean-wave environments.
 
 [ocean_demo.mp4](https://github.com/user-attachments/assets/a8083878-a297-4536-a481-9123cea7e7df)
