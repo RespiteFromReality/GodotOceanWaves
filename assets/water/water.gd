@@ -3,10 +3,10 @@ extends MeshInstance3D
 ## Handles updating the displacement/normal maps for the water material as well as
 ## managing wave generation pipelines.
 
-const WATER_MAT := preload('res://assets/water/mat_water.tres')
-const SPRAY_MAT := preload('res://assets/water/mat_spray.tres')
-const WATER_MESH_HIGH := preload('res://assets/water/clipmap_high.obj')
-const WATER_MESH_LOW := preload('res://assets/water/clipmap_low.obj')
+const WATER_MAT := preload("uid://byumtcccq4ew3")
+const SPRAY_MAT := preload("uid://5xqyddws6rt5")
+const WATER_MESH_HIGH := preload("uid://ix4vp1y05f1s")
+const WATER_MESH_LOW := preload("uid://mkodygt504hm")
 
 enum MeshQuality { LOW, HIGH }
 

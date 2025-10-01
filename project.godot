@@ -11,10 +11,10 @@ config_version=5
 [application]
 
 config/name="OceanWaves"
-run/main_scene="res://main.tscn"
+run/main_scene="uid://dx4r13gqfh13"
 config/features=PackedStringArray("4.5", "Forward Plus")
 boot_splash/show_image=false
-config/icon="res://icon.svg"
+config/icon="uid://d4lmcsuyxx6mo"
 
 [autoload]
 
