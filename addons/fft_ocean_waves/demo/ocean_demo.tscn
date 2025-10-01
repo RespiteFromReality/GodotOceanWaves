@@ -1,0 +1,460 @@
+[gd_scene load_steps=38 format=3 uid="uid://dx4r13gqfh13"]
+
+[ext_resource type="Texture2D" uid="uid://cnft723bala47" path="res://addons/fft_ocean_waves/demo/assets/skybox.png" id="2_a6hve"]
+[ext_resource type="Script" uid="uid://t0b0xjce63g6" path="res://addons/fft_ocean_waves/demo/camera.gd" id="3_n3fwf"]
+[ext_resource type="Material" uid="uid://byumtcccq4ew3" path="res://addons/fft_ocean_waves/water/assets/mat_water.tres" id="4_osnnh"]
+[ext_resource type="ArrayMesh" uid="uid://ix4vp1y05f1s" path="res://addons/fft_ocean_waves/water/assets/clipmap_high.obj" id="5_ksv6k"]
+[ext_resource type="Script" uid="uid://bh3s2wmrkkbd5" path="res://addons/fft_ocean_waves/water/water.gd" id="6_34cui"]
+[ext_resource type="Script" uid="uid://cqia0bhqd5ncb" path="res://addons/fft_ocean_waves/water/wave_cascade_parameters.gd" id="7_lfdj0"]
+[ext_resource type="Shader" uid="uid://d15gcpe6uiu7a" path="res://addons/fft_ocean_waves/water/shaders/spatial/sea_spray.gdshader" id="8_hcoe8"]
+[ext_resource type="Texture2D" uid="uid://dtm5tyuh2slqt" path="res://addons/fft_ocean_waves/water/assets/sea_spray.png" id="9_i62bo"]
+[ext_resource type="Material" uid="uid://5xqyddws6rt5" path="res://addons/fft_ocean_waves/water/assets/mat_spray.tres" id="10_vbolx"]
+[ext_resource type="AudioStream" uid="uid://cvvn0vke5comw" path="res://addons/fft_ocean_waves/demo/assets/ocean_loop.wav" id="11_odnxc"]
+[ext_resource type="AudioStream" uid="uid://ck6vmandgjhy0" path="res://addons/fft_ocean_waves/demo/assets/wind_loop.wav" id="12_8dvmo"]
+[ext_resource type="Theme" uid="uid://v3n2gr74swry" path="res://addons/fft_ocean_waves/demo/ui/imgui_theme.tres" id="12_34cui"]
+[ext_resource type="Script" uid="uid://tb5os6ji6bdc" path="res://addons/fft_ocean_waves/demo/ocean_demo.gd" id="13_lfdj0"]
+[ext_resource type="Script" uid="uid://dj3qlu7uupdmi" path="res://addons/fft_ocean_waves/demo/ui/demo_ui.gd" id="14_lfdj0"]
+[ext_resource type="Texture2D" uid="uid://cv1b46j1hm1jf" path="res://addons/fft_ocean_waves/demo/ui/assets/arrow_down.svg" id="15_odnxc"]
+[ext_resource type="Script" uid="uid://bm5qhniukkvy" path="res://addons/fft_ocean_waves/demo/ui/ui_toggle.gd" id="15_vbolx"]
+[ext_resource type="Texture2D" uid="uid://c1gwofxq55st" path="res://addons/fft_ocean_waves/demo/ui/assets/arrow_right.svg" id="16_8dvmo"]
+[ext_resource type="Script" uid="uid://shtoqnj0qq83" path="res://addons/fft_ocean_waves/demo/ui/update_fps.gd" id="16_vbolx"]
+[ext_resource type="Script" uid="uid://c16rswbyop2ht" path="res://addons/fft_ocean_waves/demo/ui/cascade_tab_generator.gd" id="17_odnxc"]
+[ext_resource type="Script" uid="uid://bva614db24pi7" path="res://addons/fft_ocean_waves/demo/ui/update_text.gd" id="21_odnxc"]
+
+[sub_resource type="PanoramaSkyMaterial" id="PanoramaSkyMaterial_t7jwl"]
+panorama = ExtResource("2_a6hve")
+
+[sub_resource type="Sky" id="Sky_vroi3"]
+sky_material = SubResource("PanoramaSkyMaterial_t7jwl")
+
+[sub_resource type="Environment" id="Environment_icybu"]
+background_mode = 2
+sky = SubResource("Sky_vroi3")
+tonemap_mode = 2
+fog_mode = 1
+fog_light_color = Color(0.272954, 0.419272, 0.484632, 1)
+fog_sun_scatter = 0.05
+fog_density = 1.0
+fog_aerial_perspective = 0.626
+fog_sky_affect = 0.0
+fog_depth_curve = 0.25
+fog_depth_begin = 200.0
+fog_depth_end = 350.0
+volumetric_fog_enabled = true
+volumetric_fog_density = 0.0
+volumetric_fog_length = 256.0
+adjustment_enabled = true
+adjustment_brightness = 0.85
+adjustment_contrast = 1.07
+adjustment_saturation = 1.5
+
+[sub_resource type="Resource" id="Resource_adqv5"]
+script = ExtResource("7_lfdj0")
+tile_length = Vector2(88, 88)
+wind_speed = 10.0
+wind_direction = 20.0
+fetch_length = 150.0
+foam_amount = 8.0
+
+[sub_resource type="Resource" id="Resource_luhq0"]
+script = ExtResource("7_lfdj0")
+tile_length = Vector2(57, 57)
+displacement_scale = 0.75
+wind_speed = 5.0
+wind_direction = 15.0
+fetch_length = 150.0
+spread = 0.4
+foam_amount = 0.0
+
+[sub_resource type="Resource" id="Resource_83u3u"]
+script = ExtResource("7_lfdj0")
+tile_length = Vector2(16, 16)
+displacement_scale = 0.0
+normal_scale = 0.25
+wind_direction = 20.0
+spread = 0.4
+whitecap = 0.25
+foam_amount = 3.0
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_k6xhe"]
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_tsx6q"]
+noise = SubResource("FastNoiseLite_k6xhe")
+seamless = true
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_ds3o1"]
+render_priority = 0
+shader = ExtResource("8_hcoe8")
+shader_parameter/max_alpha = 0.666
+shader_parameter/albedo_texture = ExtResource("9_i62bo")
+shader_parameter/dissolve_texture = SubResource("NoiseTexture2D_tsx6q")
+
+[sub_resource type="QuadMesh" id="QuadMesh_06d3e"]
+
+[sub_resource type="FogMaterial" id="FogMaterial_riff4"]
+density = 8.0
+albedo = Color(0.988718, 0.989631, 0.989629, 1)
+height_falloff = 0.176
+edge_fade = 1.75
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_osnnh"]
+bg_color = Color(0.16078432, 0.2901961, 0.47843137, 1)
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_0hjcv"]
+
+[sub_resource type="ImageTexture" id="ImageTexture_lmbus"]
+
+[sub_resource type="ImageTexture" id="ImageTexture_i62bo"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_8dvmo"]
+bg_color = Color(0.18895924, 0.19329238, 0.21495155, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_lfdj0"]
+bg_color = Color(0.18895924, 0.19329238, 0.21495155, 1)
+
+[node name="Main" type="Node3D"]
+script = ExtResource("13_lfdj0")
+
+[node name="Environment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_icybu")
+
+[node name="Sun" type="DirectionalLight3D" parent="."]
+transform = Transform3D(0.945601, -0.0516921, 0.321197, -0.00840572, 0.983084, 0.18296, -0.325221, -0.175707, 0.929171, 0, 10, 0)
+shadow_bias = 0.0
+shadow_normal_bias = 6.464
+shadow_opacity = 0.8
+shadow_blur = 5.0
+
+[node name="Camera" type="Camera3D" parent="."]
+transform = Transform3D(-0.996195, -0.0151344, 0.0858316, 0, 0.984807, 0.173648, -0.0871557, 0.172987, -0.981061, 0, 10, -25)
+script = ExtResource("3_n3fwf")
+
+[node name="Water" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2817, 0, 8916)
+sorting_offset = 999.0
+material_override = ExtResource("4_osnnh")
+cast_shadow = 0
+extra_cull_margin = 1000.0
+mesh = ExtResource("5_ksv6k")
+skeleton = NodePath("")
+script = ExtResource("6_34cui")
+parameters = Array[ExtResource("7_lfdj0")]([SubResource("Resource_adqv5"), SubResource("Resource_luhq0"), SubResource("Resource_83u3u")])
+
+[node name="WaterSprayEmitter" type="GPUParticles3D" parent="Water"]
+transform = Transform3D(61.37329, 0, 0, 0, 15, 0, 0, 0, 62.234074, 0, 0, 0)
+material_override = SubResource("ShaderMaterial_ds3o1")
+cast_shadow = 0
+amount = 32768
+lifetime = 6.0
+process_material = ExtResource("10_vbolx")
+draw_pass_1 = SubResource("QuadMesh_06d3e")
+
+[node name="FogVolume" type="FogVolume" parent="."]
+shape = 4
+material = SubResource("FogMaterial_riff4")
+
+[node name="OceanAudioPlayer" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("11_odnxc")
+volume_db = 15.0
+autoplay = true
+
+[node name="WindAudioPlayer" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("12_8dvmo")
+volume_db = -30.0
+autoplay = true
+
+[node name="DemoUI" type="Control" parent="."]
+layout_mode = 3
+anchor_left = 0.0069444445
+anchor_top = 0.012345679
+anchor_right = 0.3029514
+anchor_bottom = 0.970679
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("12_34cui")
+script = ExtResource("14_lfdj0")
+metadata/_edit_use_anchors_ = true
+
+[node name="Background" type="Panel" parent="DemoUI"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = -0.006
+anchor_right = 1.0
+anchor_bottom = 0.99500006
+offset_left = 0.046000004
+offset_top = -0.07501221
+offset_bottom = 6.1049805
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Header" type="Panel" parent="DemoUI"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = -0.006
+anchor_right = 1.0
+offset_left = -0.013999939
+offset_bottom = 23.0
+grow_horizontal = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_osnnh")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="DemoUI"]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="UIToggle" type="CheckBox" parent="DemoUI"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.059000004
+anchor_top = 0.019000001
+anchor_right = 0.059000004
+anchor_bottom = 0.019000001
+offset_left = -14.119001
+offset_top = -13.799001
+offset_right = 13.880999
+offset_bottom = 14.200999
+theme_override_styles/normal = SubResource("StyleBoxEmpty_0hjcv")
+theme_override_icons/checked = ExtResource("15_odnxc")
+theme_override_icons/unchecked = ExtResource("16_8dvmo")
+theme_override_icons/radio_unchecked = SubResource("ImageTexture_lmbus")
+theme_override_icons/unchecked_disabled = SubResource("ImageTexture_i62bo")
+button_pressed = true
+script = ExtResource("15_vbolx")
+
+[node name="OceanWaves" type="MarginContainer" parent="DemoUI"]
+layout_mode = 1
+anchors_preset = -1
+offset_left = -2.0
+offset_top = 23.0
+offset_right = 341.0
+offset_bottom = 237.0
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_right = 8
+theme_override_constants/margin_bottom = 8
+
+[node name="VBoxContainer" type="VBoxContainer" parent="DemoUI/OceanWaves"]
+layout_mode = 2
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="DemoUI/OceanWaves/VBoxContainer"]
+layout_mode = 2
+
+[node name="CameraSeparatorPrefix" type="Panel" parent="DemoUI/OceanWaves/VBoxContainer/HBoxContainer2"]
+custom_minimum_size = Vector2(0, 2)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
+theme_override_styles/panel = SubResource("StyleBoxFlat_8dvmo")
+
+[node name="OceanWavesLabel" type="Label" parent="DemoUI/OceanWaves/VBoxContainer/HBoxContainer2"]
+layout_mode = 2
+size_flags_horizontal = 0
+text = "Camera"
+
+[node name="CameraSeparatorSuffix" type="Panel" parent="DemoUI/OceanWaves/VBoxContainer/HBoxContainer2"]
+custom_minimum_size = Vector2(0, 2)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
+theme_override_styles/panel = SubResource("StyleBoxFlat_8dvmo")
+
+[node name="CameraContainer" type="GridContainer" parent="DemoUI/OceanWaves/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 0
+columns = 2
+
+[node name="FPSLabel" type="Label" parent="DemoUI/OceanWaves/VBoxContainer/CameraContainer"]
+layout_mode = 2
+text = "FPS:"
+
+[node name="FPS" type="Label" parent="DemoUI/OceanWaves/VBoxContainer/CameraContainer"]
+layout_mode = 2
+text = "?"
+
+[node name="CameraPositionLabel" type="Label" parent="DemoUI/OceanWaves/VBoxContainer/CameraContainer"]
+layout_mode = 2
+text = "Camera Position:"
+
+[node name="CameraPosition" type="Label" parent="DemoUI/OceanWaves/VBoxContainer/CameraContainer"]
+layout_mode = 2
+text = "?"
+
+[node name="CameraFOVLabel" type="Label" parent="DemoUI/OceanWaves/VBoxContainer/CameraContainer"]
+custom_minimum_size = Vector2(145.04, 0)
+layout_mode = 2
+text = "Camera FOV:"
+vertical_alignment = 1
+
+[node name="CameraFOV" type="HSlider" parent="DemoUI/OceanWaves/VBoxContainer/CameraContainer"]
+custom_minimum_size = Vector2(180, 0)
+layout_mode = 2
+size_flags_horizontal = 10
+min_value = 40.0
+max_value = 140.0
+value = 40.0
+script = ExtResource("21_odnxc")
+
+[node name="Label" type="Label" parent="DemoUI/OceanWaves/VBoxContainer/CameraContainer/CameraFOV"]
+layout_mode = 1
+anchors_preset = -1
+anchor_bottom = 0.79200006
+offset_top = 1.0
+offset_right = 180.0
+offset_bottom = 1.9519987
+text = "0.00"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="HBoxContainer" type="HBoxContainer" parent="DemoUI/OceanWaves/VBoxContainer"]
+layout_mode = 2
+
+[node name="OceanWavesSeparatorPrefix" type="Panel" parent="DemoUI/OceanWaves/VBoxContainer/HBoxContainer"]
+custom_minimum_size = Vector2(0, 2)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
+theme_override_styles/panel = SubResource("StyleBoxFlat_lfdj0")
+
+[node name="OceanWavesLabel" type="Label" parent="DemoUI/OceanWaves/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 0
+text = "Wave Detail"
+
+[node name="OceanWavesSeparatorSuffix" type="Panel" parent="DemoUI/OceanWaves/VBoxContainer/HBoxContainer"]
+custom_minimum_size = Vector2(0, 2)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
+theme_override_styles/panel = SubResource("StyleBoxFlat_lfdj0")
+
+[node name="GridContainer2" type="GridContainer" parent="DemoUI/OceanWaves/VBoxContainer"]
+custom_minimum_size = Vector2(0, 2)
+layout_mode = 2
+theme_override_constants/h_separation = 16
+theme_override_constants/v_separation = 4
+columns = 2
+
+[node name="SeaSprayToggleLabel" type="Label" parent="DemoUI/OceanWaves/VBoxContainer/GridContainer2"]
+layout_mode = 2
+text = "Enable Sea Spray:"
+
+[node name="SeaSprayToggle" type="CheckBox" parent="DemoUI/OceanWaves/VBoxContainer/GridContainer2"]
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 4
+button_pressed = true
+
+[node name="WaveResolutionLabel" type="Label" parent="DemoUI/OceanWaves/VBoxContainer/GridContainer2"]
+layout_mode = 2
+text = "Wave Resolution:"
+
+[node name="WaveResolution" type="OptionButton" parent="DemoUI/OceanWaves/VBoxContainer/GridContainer2"]
+layout_mode = 2
+size_flags_horizontal = 3
+selected = 0
+item_count = 4
+popup/item_0/text = "1024x1024"
+popup/item_0/id = 0
+popup/item_1/text = "512x512"
+popup/item_1/id = 1
+popup/item_2/text = "256x256"
+popup/item_2/id = 2
+popup/item_3/text = "128x128"
+popup/item_3/id = 3
+
+[node name="WaveMeshQualityLabel" type="Label" parent="DemoUI/OceanWaves/VBoxContainer/GridContainer2"]
+layout_mode = 2
+text = "Wave Mesh Quality:"
+
+[node name="WaveMeshQuality" type="OptionButton" parent="DemoUI/OceanWaves/VBoxContainer/GridContainer2"]
+layout_mode = 2
+selected = 1
+item_count = 2
+popup/item_0/text = "Low"
+popup/item_0/id = 0
+popup/item_1/text = "High"
+popup/item_1/id = 1
+
+[node name="UpdatesPerSecondLabel" type="Label" parent="DemoUI/OceanWaves/VBoxContainer/GridContainer2"]
+layout_mode = 2
+text = "Updates per Second:"
+
+[node name="UpdatesPerSecond" type="HSlider" parent="DemoUI/OceanWaves/VBoxContainer/GridContainer2"]
+layout_mode = 2
+max_value = 120.0
+value = 50.0
+rounded = true
+ticks_position = 3
+script = ExtResource("16_vbolx")
+
+[node name="Label" type="Label" parent="DemoUI/OceanWaves/VBoxContainer/GridContainer2/UpdatesPerSecond"]
+layout_mode = 0
+offset_top = 1.0
+offset_right = 180.0
+offset_bottom = 17.0
+text = "50"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="WaterColorLabel" type="Label" parent="DemoUI/OceanWaves/VBoxContainer/GridContainer2"]
+layout_mode = 2
+text = "Water Color:"
+
+[node name="WaterColor" type="ColorPickerButton" parent="DemoUI/OceanWaves/VBoxContainer/GridContainer2"]
+layout_mode = 2
+color = Color(0.101960786, 0.14901961, 0.18039216, 1)
+edit_alpha = false
+edit_intensity = false
+
+[node name="FoamColorLabel" type="Label" parent="DemoUI/OceanWaves/VBoxContainer/GridContainer2"]
+layout_mode = 2
+text = "Foam Color:"
+
+[node name="FoamColor" type="ColorPickerButton" parent="DemoUI/OceanWaves/VBoxContainer/GridContainer2"]
+layout_mode = 2
+color = Color(0.7294118, 0.67058825, 0.61960787, 1)
+edit_alpha = false
+edit_intensity = false
+
+[node name="GridContainer3" type="GridContainer" parent="DemoUI/OceanWaves/VBoxContainer"]
+layout_mode = 2
+columns = 3
+
+[node name="OceanWavesSeparatorPrefix" type="Panel" parent="DemoUI/OceanWaves/VBoxContainer/GridContainer3"]
+custom_minimum_size = Vector2(0, 2)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
+theme_override_styles/panel = SubResource("StyleBoxFlat_lfdj0")
+
+[node name="Wave Parameters" type="Label" parent="DemoUI/OceanWaves/VBoxContainer/GridContainer3"]
+layout_mode = 2
+text = "Wave Cascades"
+
+[node name="OceanWavesSeparatorSuffix" type="Panel" parent="DemoUI/OceanWaves/VBoxContainer/GridContainer3"]
+custom_minimum_size = Vector2(0, 2)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
+theme_override_styles/panel = SubResource("StyleBoxFlat_lfdj0")
+
+[node name="CascadeTabContainer" type="TabContainer" parent="DemoUI"]
+unique_name_in_owner = true
+clip_contents = true
+layout_mode = 0
+offset_left = 4.0
+offset_top = 296.0
+offset_right = 335.0
+offset_bottom = 600.0
+script = ExtResource("17_odnxc")
+
+[connection signal="toggled" from="DemoUI/UIToggle" to="DemoUI/UIToggle" method="_on_toggled"]
+[connection signal="value_changed" from="DemoUI/OceanWaves/VBoxContainer/CameraContainer/CameraFOV" to="DemoUI" method="_on_camera_fov_value_changed"]
+[connection signal="value_changed" from="DemoUI/OceanWaves/VBoxContainer/CameraContainer/CameraFOV" to="DemoUI/OceanWaves/VBoxContainer/CameraContainer/CameraFOV" method="_on_value_changed"]
+[connection signal="toggled" from="DemoUI/OceanWaves/VBoxContainer/GridContainer2/SeaSprayToggle" to="DemoUI" method="_on_sea_spray_toggle_toggled"]
+[connection signal="item_selected" from="DemoUI/OceanWaves/VBoxContainer/GridContainer2/WaveResolution" to="DemoUI" method="_on_wave_resolution_item_selected"]
+[connection signal="item_selected" from="DemoUI/OceanWaves/VBoxContainer/GridContainer2/WaveMeshQuality" to="DemoUI" method="_on_wave_mesh_quality_item_selected"]
+[connection signal="value_changed" from="DemoUI/OceanWaves/VBoxContainer/GridContainer2/UpdatesPerSecond" to="DemoUI" method="_on_updates_per_second_value_changed"]
+[connection signal="value_changed" from="DemoUI/OceanWaves/VBoxContainer/GridContainer2/UpdatesPerSecond" to="DemoUI/OceanWaves/VBoxContainer/GridContainer2/UpdatesPerSecond" method="_on_value_changed"]
+[connection signal="color_changed" from="DemoUI/OceanWaves/VBoxContainer/GridContainer2/WaterColor" to="DemoUI" method="_on_water_color_color_changed"]
+[connection signal="color_changed" from="DemoUI/OceanWaves/VBoxContainer/GridContainer2/FoamColor" to="DemoUI" method="_on_foam_color_color_changed"]

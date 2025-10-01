@@ -15,15 +15,11 @@ config/description="An open ocean rendering experiment in the Godot Engine utili
 
 Author:  Ethan Truong (2Retr0)
 Original repo: https://github.com/2Retr0/GodotOceanWaves"
-config/tags=PackedStringArray("c#", "gpu", "rendering", "water")
+config/tags=PackedStringArray("gpu", "rendering", "water")
 run/main_scene="uid://dx4r13gqfh13"
 config/features=PackedStringArray("4.5", "Forward Plus")
 boot_splash/show_image=false
-config/icon="uid://cw6o2ftagrlhw"
-
-[autoload]
-
-ImGuiRoot="*res://addons/imgui-godot/data/ImGuiRoot.tscn"
+config/icon="uid://dcfqf8pqvf8l2"
 
 [debug]
 
@@ -35,7 +31,6 @@ gdscript/warnings/integer_division=0
 [display]
 
 window/stretch/mode="canvas_items"
-window/stretch/aspect="ignore"
 window/vsync/vsync_mode=3
 window/quality/msaa_2d=0
 window/quality/msaa_3d=1
@@ -47,7 +42,11 @@ project/assembly_name="OceanWaves"
 
 [editor_plugins]
 
-enabled=PackedStringArray("res://addons/imgui-godot/plugin.cfg")
+enabled=PackedStringArray()
+
+[gui]
+
+theme/default_font_multichannel_signed_distance_field=true
 
 [input]
 
